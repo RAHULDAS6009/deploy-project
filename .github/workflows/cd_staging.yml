@@ -11,6 +11,7 @@ jobs:
       - run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
           mkdir -p /home/runner/.ssh
+          ls ~/ssh_key
           touch /home/runner/.ssh/know_hosts
           echo "${{ secrets.KNOWN_HOSTS }}" &> /home/runner/.ssh/known_hosts
           chmod 700 /home/runner/ssh_key
