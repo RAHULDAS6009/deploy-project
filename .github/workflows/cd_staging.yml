@@ -1,0 +1,14 @@
+name: Deploy on staging 
+on:
+  push: 
+    branches: [main]
+
+jobs:
+  redeploy_everything:
+    name: Deploying everything to the staging cluster
+
+    steps:
+      - name: SSH Into Server
+      - run: |
+      echo
+      ssh -i keypair 2.22.2.2      
