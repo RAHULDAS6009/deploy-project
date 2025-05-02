@@ -5,7 +5,7 @@ export default async function Page() {
 
   return (
     <div>
-      here is  the user :{" "}
+       is  the user :{" "}
       {user?.username}
     </div>
   );
