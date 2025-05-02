@@ -5,10 +5,17 @@ on:
 
 jobs:
   redeploy_everything:
+    runs-on: Ubuntu-latest
     name: Deploying everything to the staging cluster
-
     steps:
-      - name: SSH Into Server
       - run: |
-      echo
-      ssh -i keypair 2.22.2.2      
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+          ssh -i ~/ssh_key ubuntu@54.196.182.129
+          cd deploy-project/ && git pull
+          pnpm install 
+          pnpm run build
+          pm2 restart fe
+          pm2 restart http-server
+          pm2 restart ws-server
+          
+      
