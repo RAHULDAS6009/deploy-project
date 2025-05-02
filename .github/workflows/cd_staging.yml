@@ -15,20 +15,28 @@ jobs:
           touch /home/runner/.ssh/known_hosts
           echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
           chmod 600 ~/ssh_key
-          ssh  -i ~/ssh_key ubuntu@54.196.182.129 -t "
-          cd deploy-project &&
-          git pull origin main &&
-           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash &&
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion   &&
-          nvm install 22 &&
-          nvm use 22 &&
-          npm i -g pnpm &&
-          pnpm install &&
-          pnpm run build &&
-          pm2 restart fe &&
-          pm2 restart http-server &&
-          pm2 restart ws-server"
+
+          ssh -i ~/ssh_key -o StrictHostKeyChecking=no ubuntu@54.196.182.129 << 'EOF'
+            set -e
+            cd deploy-project
+            git pull origin main
+
+            export NVM_DIR="$HOME/.nvm"
+            if [ ! -d "$NVM_DIR" ]; then
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+            fi
+            source "$NVM_DIR/nvm.sh"
+            nvm install 22
+            nvm use 22
+
+            npm i -g pnpm
+            pnpm install
+            pnpm run build
+
+            pm2 restart fe
+            pm2 restart http-server
+            pm2 restart ws-server
+          EOF
+
           
       
